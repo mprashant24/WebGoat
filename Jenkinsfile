@@ -5,7 +5,7 @@ pipeline {
       steps {
         echo 'Capturing build using cov-build'
         sh '''echo ${CHANGE_SET}
-cov-build --desktop --dir idir --fs-capture-list ${CHANGE_SET} --no-command '''
+/opt/coverity/cov-build --desktop --dir idir --fs-capture-list ${CHANGE_SET} --no-command '''
       }
     }
   }
