@@ -4,7 +4,8 @@ pipeline {
     stage('BuildCapture') {
       steps {
         echo 'Capturing build using cov-build'
-        sh '''git diff HEAD^ HEAD > file_list.txt
+        sh '''git show
+git diff --name-only HEAD^ HEAD > file_list.txt
 cat file_list.txt
 /opt/coverity/cov-build --desktop --dir idir --fs-capture-list file_list.txt --no-command '''
       }
