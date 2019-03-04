@@ -8,14 +8,24 @@ pipeline {
   }
   stages {
     stage('BuildCapture') {
-      steps {
-        echo 'Capturing build using cov-build'
-        sh '''git show
-git diff --name-only HEAD^ HEAD > file_list.txt
+      parallel {
+        stage('Full Scan') {
+          steps {
+            sh '''git ls-files > capture-files.txt
+/opt/coverity/coverity_static_analysis/bin/cov-build --dir idir-full --fs-capture-list capture-files.txt --no-command'''
+            sh '/opt/coverity/coverity_static_analysis/bin/cov-analyze --dir idir-full --all --webapp-security '
+            sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-full --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
+          }
+        }
+        stage('Incremental Scan') {
+          steps {
+            sh '''git diff --name-only HEAD^ HEAD > file_list.txt
 cat file_list.txt
-ls -lrt /opt/coverity/coverity_static_analysis
 /opt/coverity/coverity_static_analysis/bin/cov-build --desktop --dir idir --fs-capture-list file_list.txt --no-command 
-/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file @@file_list.txt'''
+'''
+            sh '/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file @@file_list.txt'
+          }
+        }
       }
     }
   }
