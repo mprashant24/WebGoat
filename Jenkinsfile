@@ -2,7 +2,8 @@ pipeline {
   agent {
     docker {
       image 'maven:latest'
-      args '-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host'
+      args '''-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host
+-v ${WORKSPACE}/idir-full:idir-full'''
     }
 
   }
