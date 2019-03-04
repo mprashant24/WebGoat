@@ -13,6 +13,7 @@ pipeline {
         sh '''git show
 git diff --name-only HEAD^ HEAD > file_list.txt
 cat file_list.txt
+ls -lrt /opt/coverity/coverity_static_analysis
 /opt/coverity/coverity_static_analysis/cov-build --desktop --dir idir --fs-capture-list file_list.txt --no-command '''
       }
     }
