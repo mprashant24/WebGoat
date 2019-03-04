@@ -3,7 +3,7 @@ pipeline {
     docker {
       image 'maven:latest'
       args '''-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host
--v ${WORKSPACE}/idir-full:idir-full'''
+-v ${WORKSPACE}/idir-full:/opt/coverity/idir-full'''
     }
 
   }
