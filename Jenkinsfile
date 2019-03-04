@@ -9,12 +9,10 @@ pipeline {
   stages {
     stage('BuildCapture') {
       parallel {
-        stage('Full Scan') {
+        stage('Full build capture') {
           steps {
             sh '''git ls-files > capture-files.txt
 /opt/coverity/coverity_static_analysis/bin/cov-build --dir idir-full --fs-capture-list capture-files.txt --no-command'''
-            sh '/opt/coverity/coverity_static_analysis/bin/cov-analyze --dir idir-full --all --webapp-security '
-            sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-full --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
           }
         }
         stage('Incremental Scan') {
@@ -26,6 +24,16 @@ cat file_list.txt
             sh '/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file @@file_list.txt'
           }
         }
+      }
+    }
+    stage('Full Analysis') {
+      steps {
+        sh '/opt/coverity/coverity_static_analysis/bin/cov-analyze --dir idir-full --all --webapp-security '
+      }
+    }
+    stage('Full Commit') {
+      steps {
+        sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-full --host $COVERITY_HOST --https-port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
       }
     }
   }
