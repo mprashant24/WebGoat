@@ -1,6 +1,5 @@
 package org.owasp.webgoat.plugin.introduction;
 
-
 import org.owasp.webgoat.assignments.AssignmentEndpoint;
 import org.owasp.webgoat.assignments.AssignmentHints;
 import org.owasp.webgoat.assignments.AssignmentPath;
