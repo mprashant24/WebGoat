@@ -12,8 +12,8 @@ pipeline {
         stage('Full build capture') {
           steps {
             sh '''#git ls-files > capture-files.txt
-ls -lart $HOME/.coverity
 chmod -R a+w $HOME/.coverity
+ls -lart $HOME/.coverity
 echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > capture-files.txt 
 echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/introduction/SqlInjectionLesson5a.java >> capture-files.txt 
 echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/introduction/SqlInjection.java >> capture-files.txt 
