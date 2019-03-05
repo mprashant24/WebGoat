@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'maven:latest'
-      args '-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host '
+      args '-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host -u root:root'
     }
 
   }
@@ -22,6 +22,11 @@ echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanc
     stage('Full Commit') {
       steps {
         sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-full --host $COVERITY_HOST --https-port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
+      }
+    }
+    stage('Clean up') {
+      steps {
+        cleanWs(cleanWhenSuccess: true)
       }
     }
   }
