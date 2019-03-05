@@ -12,7 +12,8 @@ pipeline {
         stage('Full build capture') {
           steps {
             sh '''#git ls-files > capture-files.txt
-echo $HOME
+ls -lart $HOME/.coverity
+chmod -R a+w $HOME/.coverity
 echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > capture-files.txt 
 echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/introduction/SqlInjectionLesson5a.java >> capture-files.txt 
 echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/introduction/SqlInjection.java >> capture-files.txt 
@@ -36,12 +37,13 @@ cat file_list.txt
     }
     stage('Full Analysis') {
       steps {
-        sh '/opt/coverity/coverity_static_analysis/bin/cov-analyze --dir idir-full --all --webapp-security '
+        sh '''ls -lart $HOME/.coverity
+/opt/coverity/coverity_static_analysis/bin/cov-analyze --dir idir-full --all --webapp-security '''
       }
     }
     stage('Full Commit') {
       steps {
-        sh '''export HOME=/root
+        sh '''ls -lart $HOME/.coverity
 /opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-full --host $COVERITY_HOST --https-port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '''
       }
     }
@@ -51,5 +53,6 @@ cat file_list.txt
     COVERITY_PORT = '8443'
     COVERITY_STREAM = 'webgoat8'
     COVERITY_SNAPSHOT = 'latest'
+    HOME = '/root'
   }
 }
