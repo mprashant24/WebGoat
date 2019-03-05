@@ -1,6 +1,5 @@
 package org.owasp.webgoat.plugin.introduction;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
