@@ -9,7 +9,8 @@ pipeline {
   stages {
     stage('Full build capture') {
       steps {
-        sh '''git ls-files > capture-files.txt
+        sh '''#git ls-files > capture-files.txt
+echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > capture-files.txt
 /opt/coverity/coverity_static_analysis/bin/cov-build --dir idir-full --fs-capture-list capture-files.txt --no-command'''
       }
     }
