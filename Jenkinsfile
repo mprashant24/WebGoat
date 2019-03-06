@@ -9,8 +9,9 @@ pipeline {
   stages {
     stage('Desktop build capture') {
       steps {
-        sh '''git diff --name-only ${GIT_COMMIT} ${GIT_PREVIOUS_SUCCESSFUL_COMMIT} > change_list.txt
-#echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > capture-files.txt
+        sh '''git diff --name-only $GIT_COMMIT $GIT_PREVIOUS_SUCCESSFUL_COMMIT > change_list.txt
+cat change_list.txt
+echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > change_list.txt
 /opt/coverity/coverity_static_analysis/bin/cov-build --desktop --dir idir-desktop --fs-capture-list change_list.txt --no-command'''
       }
     }
