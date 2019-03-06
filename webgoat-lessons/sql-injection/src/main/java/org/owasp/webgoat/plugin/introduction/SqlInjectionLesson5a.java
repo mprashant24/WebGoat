@@ -79,6 +79,7 @@ public class SqlInjectionLesson5a extends AssignmentEndpoint {
                         return trackProgress(failed().output(output.toString()).build());
                     }
                 } else {
+                    System.out.println(results.first());
                     return trackProgress(failed().feedback("sql-injection.5a.no.results").build());
 
                 }
