@@ -23,7 +23,7 @@ pipeline {
     }
     stage('Commit') {
       steps {
-        sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-desktop --host $COVERITY_HOST --https-port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
+        sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-desktop --host $COVERITY_HOST --https-port $COVERITY_PORT --stream $COMMIT_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
       }
     }
     stage('Cleanup') {
@@ -35,7 +35,8 @@ pipeline {
   environment {
     COVERITY_HOST = '192.168.99.1'
     COVERITY_PORT = '8443'
-    COVERITY_STREAM = 'webgoat8-incremental'
+    COVERITY_STREAM = 'webgoat8'
     COVERITY_SNAPSHOT = 'latest'
+    COMMIT_STREAM = 'webgoat8-incremental'
   }
 }
