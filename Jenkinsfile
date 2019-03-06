@@ -21,9 +21,23 @@ echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanc
         sh '/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir-desktop --host $COVERITY_HOST --port $COVERITY_PORT --ssl --on-new-cert trust --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file --ignore-uncapturable-inputs true --text-output analyze_result.txt --text-output-style multiline --json-output-v6 analyze_result.json --present-in-reference false @@change_list.txt'
       }
     }
-    stage('Clean up') {
+    stage('Archive result') {
+      parallel {
+        stage('Archive result') {
+          steps {
+            archiveArtifacts 'analyze_result.txt analyze_result.json'
+          }
+        }
+        stage('Email Scan Result') {
+          steps {
+            emailext(subject: 'Incremental Scan Result', body: 'Attached defect found in your last commit', attachmentsPattern: 'analyze*.txt', from: 'no-reply@coverity.com', to: ' mishrap@synopsys.com')
+          }
+        }
+      }
+    }
+    stage('') {
       steps {
-        cleanWs(cleanWhenSuccess: true, cleanWhenFailure: true, cleanWhenAborted: true)
+        cleanWs(cleanWhenFailure: true, cleanWhenSuccess: true, cleanWhenAborted: true)
       }
     }
   }
