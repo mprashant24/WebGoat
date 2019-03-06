@@ -23,7 +23,7 @@ echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanc
     }
     stage('Clean up') {
       steps {
-        cleanWs(cleanWhenSuccess: true)
+        cleanWs(cleanWhenSuccess: true, cleanWhenFailure: true, cleanWhenAborted: true)
       }
     }
   }
