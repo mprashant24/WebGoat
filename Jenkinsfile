@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      args '-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host'
+      args '-v /opt/coverity/coverity_static_analysis:/opt/coverity/coverity_static_analysis --hostname covuser-vm --network host -u root:root'
       image 'alpine:latest'
       label 'Docker'
     }
