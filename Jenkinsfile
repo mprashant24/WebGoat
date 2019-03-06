@@ -7,21 +7,16 @@ pipeline {
 
   }
   stages {
-    stage('Full build capture') {
+    stage('Desktop build capture') {
       steps {
-        sh '''git ls-files > capture-files.txt
+        sh '''git diff --name-only ${GIT_COMMIT} ${GIT_PREVIOUS_SUCCESSFUL_COMMIT} > change_list.txt
 #echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > capture-files.txt
-/opt/coverity/coverity_static_analysis/bin/cov-build --dir idir-full --fs-capture-list capture-files.txt --no-command'''
+/opt/coverity/coverity_static_analysis/bin/cov-build --desktop --dir idir-desktop --fs-capture-list change_list.txt --no-command'''
       }
     }
-    stage('Full Analysis') {
+    stage('Incremental Analysis') {
       steps {
-        sh '/opt/coverity/coverity_static_analysis/bin/cov-analyze --dir idir-full --all --webapp-security '
-      }
-    }
-    stage('Full Commit') {
-      steps {
-        sh '/opt/coverity/coverity_static_analysis/bin/cov-commit-defects --dir idir-full --host $COVERITY_HOST --https-port $COVERITY_PORT --stream $COVERITY_STREAM --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file '
+        sh '/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file --ignore-uncapturable-inputs true --text-output analyze_result.txt --text-output-style multiline --json-output-v6 analyze_result.json --present-in-reference false @@change_list.txt'
       }
     }
     stage('Clean up') {
