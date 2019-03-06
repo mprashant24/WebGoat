@@ -16,7 +16,7 @@ pipeline {
     }
     stage('Incremental Analysis') {
       steps {
-        sh '/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file --ignore-uncapturable-inputs true --text-output analyze_result.txt --text-output-style multiline --json-output-v6 analyze_result.json --present-in-reference false @@change_list.txt'
+        sh '/opt/coverity/coverity_static_analysis/bin/cov-run-desktop --dir idir-desktop --host $COVERITY_HOST --port $COVERITY_PORT --stream $COVERITY_STREAM --reference-snapshot $COVERITY_SNAPSHOT --auth-key-file /opt/coverity/coverity_static_analysis/bin/auth-key-file --ignore-uncapturable-inputs true --text-output analyze_result.txt --text-output-style multiline --json-output-v6 analyze_result.json --present-in-reference false @@change_list.txt'
       }
     }
     stage('Clean up') {
