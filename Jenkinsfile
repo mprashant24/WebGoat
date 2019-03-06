@@ -11,8 +11,8 @@ pipeline {
     stage('Desktop build capture') {
       steps {
         sh '''git diff --name-only $GIT_COMMIT $GIT_PREVIOUS_SUCCESSFUL_COMMIT > change_list.txt
-cat change_list.txt
-echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > change_list.txt
+#cat change_list.txt
+#echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanced/SqlInjectionChallenge.java > change_list.txt
 /opt/coverity/coverity_static_analysis/bin/cov-build --desktop --dir idir-desktop --fs-capture-list change_list.txt --no-command'''
       }
     }
@@ -25,7 +25,7 @@ echo webgoat-lessons/sql-injection/src/main/java/org/owasp/webgoat/plugin/advanc
       parallel {
         stage('Archive result') {
           steps {
-            archiveArtifacts 'analyze_result.txt analyze_result.json'
+            archiveArtifacts 'analyze_result.txt, analyze_result.json'
           }
         }
         stage('Email Scan Result') {
